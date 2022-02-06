@@ -1,7 +1,7 @@
 
 #AngryBird Clone
 
-[resim]()
+[resim](https://raw.githubusercontent.com/hamitseyrek/AngryBirdClone/hamitseyrek/AngryBirdClone/Assets.xcassets/thumbforreadme.imageset/Simulator%20Screen%20Shot%20-%20iPhone%2012%20mini%20-%202022-02-06%20at%2017.57.31.png)
 
 
 # SpriteKit
