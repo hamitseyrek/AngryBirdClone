@@ -8,7 +8,12 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+enum ColliderType : UInt32 {
+    case Bird = 1
+    case Box = 2
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //MARK: - Variables
     var bird = SKSpriteNode()
@@ -19,6 +24,13 @@ class GameScene: SKScene {
     var box5 = SKSpriteNode()
     var gameStarted = false
     var originalPosition : CGPoint?
+    var score = 0
+    var scoreLabel = SKLabelNode()
+    var box1Position :CGPoint?
+    var box2Position :CGPoint?
+    var box3Position :CGPoint?
+    var box4Position :CGPoint?
+    var box5Position :CGPoint?
     
     override func didMove(to view: SKView) {
         
@@ -31,6 +43,14 @@ class GameScene: SKScene {
          bird.zPosition = 1
          self.addChild(bird)
          */
+        
+        // MARK: - Create score label with code
+        scoreLabel.fontName = "Helvetica"
+        scoreLabel.fontSize = 60
+        scoreLabel.text = "0"
+        scoreLabel.position = CGPoint(x: 0, y: self.frame.height / 4)
+        scoreLabel.zPosition = 2
+        self.addChild(scoreLabel)
         
         // set frame physics body
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
@@ -56,6 +76,8 @@ class GameScene: SKScene {
         box1.physicsBody?.allowsRotation = true
         box1.physicsBody?.isDynamic = true
         box1 .physicsBody?.mass = 0.1
+        bird.physicsBody?.allowsRotation = false
+        box1Position = box1.position
         
         // make box2 physics body
         box2 = childNode(withName: "box2") as! SKSpriteNode
@@ -64,6 +86,7 @@ class GameScene: SKScene {
         box2.physicsBody?.allowsRotation = true
         box2.physicsBody?.isDynamic = true
         box2 .physicsBody?.mass = 0.3
+        box2Position = box2.position
         
         // make box3 physics body
         box3 = childNode(withName: "box3") as! SKSpriteNode
@@ -72,6 +95,7 @@ class GameScene: SKScene {
         box3.physicsBody?.allowsRotation = true
         box3.physicsBody?.isDynamic = true
         box3 .physicsBody?.mass = 0.3
+        box3Position = box3.position
         
         // make box4 physics body
         box4 = childNode(withName: "box4") as! SKSpriteNode
@@ -80,6 +104,7 @@ class GameScene: SKScene {
         box4.physicsBody?.allowsRotation = true
         box4.physicsBody?.isDynamic = true
         box4 .physicsBody?.mass = 0.3
+        box4Position = box4.position
         
         // make box5 physics body
         box5 = childNode(withName: "box5") as! SKSpriteNode
@@ -88,9 +113,28 @@ class GameScene: SKScene {
         box5.physicsBody?.allowsRotation = true
         box5.physicsBody?.isDynamic = true
         box5.physicsBody?.mass = 0.3
+        box5Position = box5.position
+        
+        //MARK: - Collision processes
+        self.physicsWorld.contactDelegate = self
+        
+        bird.physicsBody?.contactTestBitMask = ColliderType.Bird.rawValue
+        bird.physicsBody?.categoryBitMask = ColliderType.Bird.rawValue
+        bird.physicsBody?.collisionBitMask = ColliderType.Box.rawValue
+        
+        box1.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        box2.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        box3.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        box4.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
+        box5.physicsBody?.collisionBitMask = ColliderType.Bird.rawValue
     }
     
-    
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contact.bodyA.collisionBitMask == ColliderType.Bird.rawValue || contact.bodyB.collisionBitMask == ColliderType.Bird.rawValue {
+            score += 1
+            scoreLabel.text = String(score)
+        }
+    }
     
     func touchDown(atPoint pos : CGPoint) {
         
@@ -128,6 +172,13 @@ class GameScene: SKScene {
                 bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
                 bird.physicsBody?.angularVelocity = 0
                 bird.position = originalPosition!
+                
+                box1.position = box1Position!
+                box2.position = box2Position!
+                box3.position = box3Position!
+                box4.position = box4Position!
+                box5.position = box5Position!
+                
                 gameStarted = false
             }
         }

@@ -27,6 +27,7 @@
 		5E410A0C27AFC60A000F7857 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5E410A0E27AFC60E000F7857 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E410A1127AFC60E000F7857 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5E54C9D827B01B69006E035E /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +44,7 @@
 		5E4109F527AFC60A000F7857 = {
 			isa = PBXGroup;
 			children = (
+				5E54C9D827B01B69006E035E /* Readme.md */,
 				5E410A0027AFC60A000F7857 /* AngryBirdClone */,
 				5E4109FF27AFC60A000F7857 /* Products */,
 			);
