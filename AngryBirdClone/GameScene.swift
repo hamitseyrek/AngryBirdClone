@@ -47,7 +47,7 @@ class GameScene: SKScene {
         
         // define size and texture for bricks
         let boxTexture = SKTexture(imageNamed: "brick")
-        let boxSize = CGSize(width: boxTexture.size().width / 6, height: boxTexture.size().height / 6)
+        let boxSize = CGSize(width: boxTexture.size().width / 6.5, height: boxTexture.size().height / 6.5)
         
         // make box1 physics body
         box1 = childNode(withName: "box1") as! SKSpriteNode
@@ -83,9 +83,7 @@ class GameScene: SKScene {
         
         // make box5 physics body
         box5 = childNode(withName: "box5") as! SKSpriteNode
-        let box5Texture = SKTexture(imageNamed: "box5")
-        let box5Size = CGSize(width: box5Texture.size().width, height: box5Texture.size().height / 10)
-        box5.physicsBody = SKPhysicsBody(rectangleOf: box5Size)
+        box5.physicsBody = SKPhysicsBody(rectangleOf: boxSize)
         box5.physicsBody?.affectedByGravity = true
         box5.physicsBody?.allowsRotation = true
         box5.physicsBody?.isDynamic = true
@@ -122,29 +120,43 @@ class GameScene: SKScene {
         
     }
     
+    override func update(_ currentTime: TimeInterval) {
+        // reset game when bird stop
+        if let birdPhysicsBody = bird.physicsBody {
+            if birdPhysicsBody.velocity.dx <= 0.1 && birdPhysicsBody.velocity.dy <= 0.1 && birdPhysicsBody.angularVelocity <= 0.1 && gameStarted == true {
+                bird.physicsBody?.affectedByGravity = false
+                bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                bird.physicsBody?.angularVelocity = 0
+                bird.position = originalPosition!
+                gameStarted = false
+            }
+        }
+    }
+    
     //MARK: - Special Fuchtions
     //get and move node in touch point that is bird
     func startGame(touches : Set<UITouch>, isTouchesEnded : Bool = false) {
-    if gameStarted == false {
-        if let touch = touches.first {
-            let touchLocation = touch.location(in: self)
-            let touchNodes = nodes(at: touchLocation)
-            if touchNodes.isEmpty == false {
-                for node in touchNodes {
-                    if let sprite = node as? SKSpriteNode {
-                        if sprite == bird {
-                            // is touches ended?
-                            if isTouchesEnded == true {
-                                let dx = touchLocation.x - originalPosition!.x
-                                let dy = touchLocation.y - originalPosition!.y
-                                
-                                let impulse = CGVector(dx: -dx, dy: -dy)
-                                bird.physicsBody?.applyImpulse(impulse)
-                                bird.physicsBody?.affectedByGravity = true
-                                
-                                gameStarted = true
-                            } else {
-                                bird.position = touchLocation
+        if gameStarted == false {
+            if let touch = touches.first {
+                let touchLocation = touch.location(in: self)
+                let touchNodes = nodes(at: touchLocation)
+                if touchNodes.isEmpty == false {
+                    for node in touchNodes {
+                        if let sprite = node as? SKSpriteNode {
+                            if sprite == bird {
+                                // is touches ended?
+                                if isTouchesEnded == true {
+                                    let dx = touchLocation.x - originalPosition!.x
+                                    let dy = touchLocation.y - originalPosition!.y
+                                    
+                                    let impulse = CGVector(dx: -dx, dy: -dy)
+                                    bird.physicsBody?.applyImpulse(impulse)
+                                    bird.physicsBody?.affectedByGravity = true
+                                    
+                                    gameStarted = true
+                                } else {
+                                    bird.position = touchLocation
+                                }
                             }
                         }
                     }
@@ -152,6 +164,6 @@ class GameScene: SKScene {
             }
         }
     }
-    }
+    
 }
 
